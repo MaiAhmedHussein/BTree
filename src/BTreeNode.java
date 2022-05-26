@@ -1,32 +1,36 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
-    //Every node except root must contain at least t-1 keys. The root may contain minimum 1 key.
+    private int numOfKeys;
+    private boolean isLeaf = false;
+
     //the maximum size of it 2*t-1
-    private List<K> keys;
-    private List<V> values;
+    private List<K> keys = new ArrayList<>();
+    private List<V> values= new ArrayList<>();
     //Number of children of a node is equal to the number of keys in it plus 1
-    private List<IBTreeNode<K, V>> children;
+    private List<IBTreeNode<K, V>> children= new ArrayList<>();
+
 
 
     @Override
     public int getNumOfKeys() {
-        return keys.size();
+        return this.keys.size();
     }
 
     @Override
     public void setNumOfKeys(int numOfKeys) {
-
+        this.numOfKeys = numOfKeys;
     }
 
     @Override
     public boolean isLeaf() {
-        return children.size() == 0;
+        return isLeaf;
     }
 
     @Override
     public void setLeaf(boolean isLeaf) {
-        children.clear();
+        this.isLeaf = isLeaf;
     }
 
     @Override
