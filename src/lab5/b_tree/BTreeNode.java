@@ -1,6 +1,6 @@
 package lab5.b_tree;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
@@ -12,9 +12,9 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
     private int numOfKeys;
 
     public BTreeNode() {
-        this.keys = new LinkedList<>();
-        this.values = new LinkedList<>();
-        this.children = new LinkedList<>();
+        this.keys = new ArrayList<>();
+        this.values = new ArrayList<>();
+        this.children = new ArrayList<>();
         this.numOfKeys = -1;
         this.isLeaf = false;
     }
@@ -46,7 +46,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setKeys(List<K> keys) {
-        this.keys = new LinkedList<>(keys);
+        this.keys = keys;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setValues(List<V> values) {
-        this.values = new LinkedList<>(values);
+        this.values = values;
     }
 
     @Override
@@ -66,6 +66,6 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setChildren(List<IBTreeNode<K, V>> children) {
-        this.children = new LinkedList<>(children);
+        this.children = children;
     }
 }

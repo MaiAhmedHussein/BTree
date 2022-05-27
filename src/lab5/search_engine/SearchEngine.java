@@ -19,9 +19,11 @@ public class SearchEngine implements ISearchEngine {
 
     // IBTree<id, IBTree<Word, its_rank>>
     private final IBTree<String, IBTree<String, Integer>> tree;
+    private final List<String> ids; // to save all ids all the time
 
     public SearchEngine(int t) {
         this.tree = new BTree<>(t);
+        this.ids = new LinkedList<>();
     }
 
     /**
@@ -64,7 +66,7 @@ public class SearchEngine implements ISearchEngine {
 
         for (WikiDoc doc : wikiDoc) {
             String[] words = doc.getData().replaceAll("\n", " ").toLowerCase().split(" ");
-            IBTree<String, Integer> word_rank = new BTree<>(100);
+            IBTree<String, Integer> word_rank = new BTree<>(5);
             for (String word : words) {
                 if (word.equals("")) continue;
 
@@ -77,6 +79,7 @@ public class SearchEngine implements ISearchEngine {
                 }
             }
             tree.insert(doc.getId(), word_rank);
+            ids.add(doc.getId());
         }
     }
 

@@ -1,14 +1,14 @@
 package lab5;
 
-import lab5.b_tree.BTree;
-import lab5.b_tree.IBTree;
+import lab5.search_engine.ISearchEngine;
+import lab5.search_engine.SearchEngine;
 
 public class Main {
 
     public static void main(String[] args) {
-        // write your code here
-        IBTree<String, String> ibTree = new BTree<>(4);
 
+        ISearchEngine searchEngine = new SearchEngine(10);
+        searchEngine.indexWebPage("src/data_sample/wiki_00");
 
     }
 }

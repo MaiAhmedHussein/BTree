@@ -1,14 +1,14 @@
 package lab5.b_tree;
 
 import javax.management.RuntimeErrorException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
     private final int maxKeys;
-    private IBTreeNode<K, V> root;
     private final int minimumDegree;
+    private IBTreeNode<K, V> root;
 
     public BTree(int minimumDegree) {
         this.root = null;
@@ -39,11 +39,11 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         if (this.getRoot() == null) {
             //for the first node
             this.root = new BTreeNode<>();
-            List<K> keys = new LinkedList<>();
+            List<K> keys = new ArrayList<>();
             keys.add(key);
-            List<V> values = new LinkedList<>();
+            List<V> values = new ArrayList<>();
             values.add(value);
-            List<IBTreeNode<K, V>> children = new LinkedList<>();
+            List<IBTreeNode<K, V>> children = new ArrayList<>();
             this.root.setChildren(children);
             this.root.setKeys(keys);
             this.root.setValues(values);
@@ -117,9 +117,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         List<V> values = child.getValues();
         List<IBTreeNode<K, V>> children = child.getChildren();
 
-        List<K> newKeys = new LinkedList<>();
-        List<V> newValues = new LinkedList<>();
-        List<IBTreeNode<K, V>> newChildren = new LinkedList<>();
+        List<K> newKeys = new ArrayList<>();
+        List<V> newValues = new ArrayList<>();
+        List<IBTreeNode<K, V>> newChildren = new ArrayList<>();
 
         if (child.isLeaf()) {
             //assign the new leaves
@@ -152,9 +152,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         int j;
         for (j = 0; j < newKeys.size() && (keys.get(i)).compareTo(newKeys.get(j)) >= 0; ++j)
-
-
             newKeys.add(j, midKey);
+
         newValues.add(j, values.get(i));
         newChildren.remove(j);
         newChildren.add(j, leftSplit);
@@ -166,9 +165,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         //initialize for the right side
 
-        newKeys = new LinkedList<>();
-        newValues = new LinkedList<>();
-        newChildren = new LinkedList<>();
+        newKeys = new ArrayList<>();
+        newValues = new ArrayList<>();
+        newChildren = new ArrayList<>();
 
         ++i;
         for (; i < child.getNumOfKeys(); ++i) {
@@ -204,9 +203,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         IBTreeNode<K, V> leftSplit = new BTreeNode<>();
         IBTreeNode<K, V> rightSplit = new BTreeNode<>();
 
-        List<K> newKeys = new LinkedList<>();
-        List<V> newValues = new LinkedList<>();
-        List<IBTreeNode<K, V>> newChildren = new LinkedList<>();
+        List<K> newKeys = new ArrayList<>();
+        List<V> newValues = new ArrayList<>();
+        List<IBTreeNode<K, V>> newChildren = new ArrayList<>();
 
         if (node.isLeaf()) {
             leftSplit.setLeaf(true);
@@ -234,9 +233,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         // initialize again the newKeys, newValues,newChildren to be used for the newRoot
 
-        newKeys = new LinkedList<>();
-        newValues = new LinkedList<>();
-        newChildren = new LinkedList<>();
+        newKeys = new ArrayList<>();
+        newValues = new ArrayList<>();
+        newChildren = new ArrayList<>();
 
         //take the middle value and make it the newRoot
         //update for the newRoot all its keys, values, children and number of keys
@@ -250,9 +249,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         newRoot.setNumOfKeys(newKeys.size());
 
         // initialize again the newKeys, newValues,newChildren to be used for the right side
-        newKeys = new LinkedList<>();
-        newValues = new LinkedList<>();
-        newChildren = new LinkedList<>();
+        newKeys = new ArrayList<>();
+        newValues = new ArrayList<>();
+        newChildren = new ArrayList<>();
 
         //continue looping after the middle to be the right side of the new root
         ++i;
