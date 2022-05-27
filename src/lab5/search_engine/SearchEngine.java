@@ -107,57 +107,54 @@ public class SearchEngine implements ISearchEngine {
         }
     }
 
-    @Override
+     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
-
-        /*
-        List<ISearchResult> searched = new ArrayList<>();
-        if (word != (null)) {
-            if (word.equals("")) {
-                return searched;
-            }
-            String toBeFound = word.toLowerCase();
-            for (int i = 0; i < files.size(); i++) {
-                HashMap temp = files.get(i);
-                Iterator iterator = temp.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry entry = (Map.Entry) iterator.next();
-                    BTree tree = (BTree) entry.getValue();
-                    if (tree.search(toBeFound) != null) {
-                        searched.add(new SearchResult((String) entry.getKey(), (int) tree.search(toBeFound)));
-                    }
-                }
-            }
-            return searched;
-        } else {
+        if (word == null) {
             throw new RuntimeErrorException(new Error());
         }
 
-         */
-        return null;
+        if (word.equals("")) {//empty word
+            return new ArrayList<>();
+        }
+
+        List<ISearchResult> searched = new ArrayList<>();
+
+        for (Map<String, IBTree<String, Integer>> file : files) {//looping on every file to find the file that contains this word
+            //Returning an iterator over the words in this file
+            for (Map.Entry<String, IBTree<String, Integer>> stringIBTreeEntry : file.entrySet()) {
+                BTree tree = (BTree) ((Map.Entry) stringIBTreeEntry).getValue();
+                if (tree.search(word.toLowerCase()) != null) {
+                    searched.add(new SearchResult((String) ((Map.Entry) stringIBTreeEntry).getKey(), (int) tree.search(word.toLowerCase())));
+                }
+            }
+        }
+        return searched;
+
+
     }
 
     @Override
     public List<ISearchResult> searchByMultipleWordWithRanking(String sentence) {
-        /*
-        List<ISearchResult> searched = new ArrayList<>();
-        if (sentence != (null)) {
-            if (sentence.equals("")) {
-                return searched;
-            }
-            String[] words = sentence.replaceAll("\n", " ").toLowerCase().split(" ");
-            for (int i = 0; i < words.length; i++) {
-                List<ISearchResult> temp = searchByWordWithRanking(words[i]);
-                for (int j = 0; j < temp.size(); j++) {
-                    searched.add(temp.get(j));
-                }
-            }
-            return searched;
-        } else {
+
+        if (sentence == null) {
             throw new RuntimeErrorException(new Error());
         }
-         */
-        return null;
+
+        if (sentence.equals("")) {//empty word
+            return new ArrayList<>();
+        }
+
+        List<ISearchResult> searched = new ArrayList<>();
+
+        String[] words = sentence.replaceAll("\n", " ").toLowerCase().split(" ");
+        for (String word : words) {//Search for each word separately.
+            List<ISearchResult> searchedWord = searchByWordWithRanking(word);
+            searched.addAll(searchedWord);
+        }
+        return searched;
+
+
     }
+
 
 }
