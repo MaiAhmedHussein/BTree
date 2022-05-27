@@ -76,6 +76,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         insertInto.setNumOfKeys(keys.size());
     }
 
+
+
+
     public IBTreeNode<K, V> getInsertionPosition(IBTreeNode<K, V> node, K key) {
         // If root is full, then tree grows in height
         //so we need to split it
@@ -117,6 +120,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         return node;
     }
 
+
     //where node is the parent of the child
     public IBTreeNode<K, V> split(IBTreeNode<K, V> node, IBTreeNode<K, V> child, K key) {
         IBTreeNode<K, V> leftSplit = new BTreeNode<>();
@@ -153,11 +157,11 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         leftSplit.setChildren(newChildren);
         leftSplit.setNumOfKeys(newKeys.size());
 
-        //updating for the new root
+        //updating for the new root the middle item
         newKeys = node.getKeys();
         newValues = node.getValues();
         newChildren = node.getChildren();
-        K midKey = (keys.get(i));
+        K midKey = keys.get(i);
 
         int j;
         for ( j = 0 ; j < newKeys.size(); j++){
@@ -166,7 +170,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             }
         }
 
-            newKeys.add(j, midKey);
+        newKeys.add(j, midKey);
         newValues.add(j, values.get(i));
         newChildren.remove(j);
         newChildren.add(j, leftSplit);
