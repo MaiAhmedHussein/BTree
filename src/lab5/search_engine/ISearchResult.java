@@ -1,4 +1,4 @@
-package ds2.lab5.search_engine;
+package lab5.search_engine;
 
 public interface ISearchResult {
 

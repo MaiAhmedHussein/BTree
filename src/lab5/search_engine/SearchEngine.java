@@ -1,7 +1,7 @@
-package ds2.lab5.search_engine;
+package lab5.search_engine;
 
-import ds2.lab5.b_tree.BTree;
-import ds2.lab5.b_tree.IBTree;
+import lab5.b_tree.BTree;
+import lab5.b_tree.IBTree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

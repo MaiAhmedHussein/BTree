@@ -1,4 +1,4 @@
-package ds2.lab5.b_tree;
+package lab5.b_tree;
 
 import java.util.LinkedList;
 import java.util.List;
