@@ -7,21 +7,25 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.management.RuntimeErrorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SearchEngine implements ISearchEngine {
 
     // IBTree<id, IBTree<Word, its_rank>>
     private final IBTree<String, IBTree<String, Integer>> tree;
-
-    public SearchEngine(int t) {
+    private final List<Map<String, IBTree<String, Integer>>> files;
+    public SearchEngine(int t, List<Map<String, IBTree<String, Integer>>> files) {
         this.tree = new BTree<>(t);
+        this.files = files;
     }
 
     /**
@@ -107,7 +111,7 @@ public class SearchEngine implements ISearchEngine {
         }
     }
 
-     @Override
+    @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
         if (word == null) {
             throw new RuntimeErrorException(new Error());
