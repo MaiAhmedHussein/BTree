@@ -1,14 +1,17 @@
 package lab5.b_tree;
 
 import javax.management.RuntimeErrorException;
-import java.util.ArrayList;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
+
     private final int maxKeys;
-    private final int minimumDegree;
     private IBTreeNode<K, V> root;
+    private final int minimumDegree;
+
 
     public BTree(int minimumDegree) {
         this.root = null;
@@ -30,7 +33,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     public IBTreeNode<K, V> getRoot() {
         return this.root;
     }
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void insert(K key, V value) {
         if (search(key) != null)//already exists
@@ -39,11 +42,11 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         if (this.getRoot() == null) {
             //for the first node
             this.root = new BTreeNode<>();
-            List<K> keys = new ArrayList<>();
+            List<K> keys = new LinkedList<>();
             keys.add(key);
-            List<V> values = new ArrayList<>();
+            List<V> values = new LinkedList<>();
             values.add(value);
-            List<IBTreeNode<K, V>> children = new ArrayList<>();
+            List<IBTreeNode<K, V>> children = new LinkedList<>();
             this.root.setChildren(children);
             this.root.setKeys(keys);
             this.root.setValues(values);
@@ -56,8 +59,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             //if the inserted value is greater than the key in the list
             //then find the right to place to insert into inside the node
             int i;
-            for (i = 0; i < insertInto.getNumOfKeys(); i++) {
-                //find the right to place to insert into inside the node
+            for (i = 0; i < insertInto.getNumOfKeys(); i++) { //find the right to place to insert into inside the node
                 if (key.compareTo(keys.get(i)) < 0) {
                     break;
                 }
@@ -69,8 +71,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     }
 
     public IBTreeNode<K, V> getInsertionPosition(IBTreeNode<K, V> node, K key) {
-        // If root is full, then tree grows in height,
-        // so we need to split it
+        // If root is full, then tree grows in height
+        //so we need to split it
         if (node.getNumOfKeys() == this.maxKeys) {
             this.splitRoot(node);
             node = this.root;
@@ -105,6 +107,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             }
 
         }
+
         return node;
     }
 
@@ -117,9 +120,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         List<V> values = child.getValues();
         List<IBTreeNode<K, V>> children = child.getChildren();
 
-        List<K> newKeys = new ArrayList<>();
-        List<V> newValues = new ArrayList<>();
-        List<IBTreeNode<K, V>> newChildren = new ArrayList<>();
+        List<K> newKeys = new LinkedList<>();
+        List<V> newValues = new LinkedList<>();
+        List<IBTreeNode<K, V>> newChildren = new LinkedList<>();
 
         if (child.isLeaf()) {
             //assign the new leaves
@@ -151,9 +154,13 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         K midKey = (keys.get(i));
 
         int j;
-        for (j = 0; j < newKeys.size() && (keys.get(i)).compareTo(newKeys.get(j)) >= 0; ++j)
-            newKeys.add(j, midKey);
+        for ( j = 0 ; j < newKeys.size(); j++){
+            if (keys.get(i).compareTo(newKeys.get(j)) < 0){
+                break;
+            }
+        }
 
+            newKeys.add(j, midKey);
         newValues.add(j, values.get(i));
         newChildren.remove(j);
         newChildren.add(j, leftSplit);
@@ -165,9 +172,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         //initialize for the right side
 
-        newKeys = new ArrayList<>();
-        newValues = new ArrayList<>();
-        newChildren = new ArrayList<>();
+        newKeys = new LinkedList<>();
+        newValues = new LinkedList<>();
+        newChildren = new LinkedList<>();
 
         ++i;
         for (; i < child.getNumOfKeys(); ++i) {
@@ -203,9 +210,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         IBTreeNode<K, V> leftSplit = new BTreeNode<>();
         IBTreeNode<K, V> rightSplit = new BTreeNode<>();
 
-        List<K> newKeys = new ArrayList<>();
-        List<V> newValues = new ArrayList<>();
-        List<IBTreeNode<K, V>> newChildren = new ArrayList<>();
+        List<K> newKeys = new LinkedList<>();
+        List<V> newValues = new LinkedList<>();
+        List<IBTreeNode<K, V>> newChildren = new LinkedList<>();
 
         if (node.isLeaf()) {
             leftSplit.setLeaf(true);
@@ -233,9 +240,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         // initialize again the newKeys, newValues,newChildren to be used for the newRoot
 
-        newKeys = new ArrayList<>();
-        newValues = new ArrayList<>();
-        newChildren = new ArrayList<>();
+        newKeys = new LinkedList<>();
+        newValues = new LinkedList<>();
+        newChildren = new LinkedList<>();
 
         //take the middle value and make it the newRoot
         //update for the newRoot all its keys, values, children and number of keys
@@ -249,9 +256,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         newRoot.setNumOfKeys(newKeys.size());
 
         // initialize again the newKeys, newValues,newChildren to be used for the right side
-        newKeys = new ArrayList<>();
-        newValues = new ArrayList<>();
-        newChildren = new ArrayList<>();
+        newKeys = new LinkedList<>();
+        newValues = new LinkedList<>();
+        newChildren = new LinkedList<>();
 
         //continue looping after the middle to be the right side of the new root
         ++i;
