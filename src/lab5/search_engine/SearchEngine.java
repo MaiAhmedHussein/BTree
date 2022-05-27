@@ -7,13 +7,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.management.RuntimeErrorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,17 +69,14 @@ public class SearchEngine implements ISearchEngine {
             IBTree<String, Integer> word_rank = new BTree<>(10);
             for (String word : words) {
                 if (word.equals("")) continue;
-                if (word_rank.search(word) == null) { // first added rank = 1
+                Integer value = word_rank.search(word);
+                if (value == null) { // first added rank = 1
                     word_rank.insert(word, 1);
                 } else { // las rank incremented by 1
-                    int rank = word_rank.search(word) + 1;
+                    int rank = value + 1;
                     word_rank.delete(word);
                     word_rank.insert(word, rank);
                 }
-                // System.out.println("Word: " + word);
-                if (word.equals("is"))
-                    System.out.println("YES_: " + word_rank.search("is"));
-
             }
             tree.insert(doc.getId(), word_rank);
             // System.out.println("YES: " + tree.search(doc.getId()).search("is"));
@@ -120,37 +115,39 @@ public class SearchEngine implements ISearchEngine {
     public List<ISearchResult> searchByWordWithRanking(String word) {
         List<ISearchResult> results = new LinkedList<>();
         for (String id : ids) {
-            Integer rank = tree.search(id).search(word);
+            Integer rank = tree.search(id).search(word.toLowerCase());
             if (rank != null) {
                 results.add(new SearchResult(id, rank));
-                // System.out.println(id);
             }
-            // System.out.println("out: " + rank);
         }
         return results;
     }
 
     @Override
     public List<ISearchResult> searchByMultipleWordWithRanking(String sentence) {
-
         if (sentence == null) {
-            throw new RuntimeErrorException(new Error());
+            return null;
         }
 
-        if (sentence.equals("")) {//empty word
-            return new ArrayList<>();
+        String[] words = sentence.toLowerCase().split(" ");
+        List<ISearchResult> res = new LinkedList<>();
+        for (String id : ids) {
+            boolean notFound = false;
+            int minValue = Integer.MAX_VALUE;
+            for (String word : words) {
+                Integer value = tree.search(id).search(word);
+                if (value == null) {
+                    notFound = true;
+                    break;
+                } else {
+                    minValue = Math.min(value, minValue);
+                }
+            }
+            if (!notFound) {
+                res.add(new SearchResult(id, minValue));
+            }
         }
-
-        List<ISearchResult> searched = new ArrayList<>();
-
-        String[] words = sentence.replaceAll("\n", " ").toLowerCase().split(" ");
-        for (String word : words) {//Search for each word separately.
-            List<ISearchResult> searchedWord = searchByWordWithRanking(word);
-            searched.addAll(searchedWord);
-        }
-        return searched;
-
-
+        return res;
     }
 
 

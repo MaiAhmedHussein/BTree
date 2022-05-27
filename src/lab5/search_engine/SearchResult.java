@@ -29,4 +29,9 @@ public class SearchResult implements ISearchResult {
     public void setRank(int rank) {
         this.rank = rank;
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id + " rank: " + rank;
+    }
 }

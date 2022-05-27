@@ -10,14 +10,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ISearchEngine searchEngine = new SearchEngine(3);
+        ISearchEngine searchEngine = new SearchEngine(10);
         searchEngine.indexWebPage("src/data_sample/wiki_00");
 
-
-       List<ISearchResult> list= searchEngine.searchByWordWithRanking("is");
-       list.forEach(System.out::println);
-       // System.out.println("jii");
-
+        List<ISearchResult> wiki = searchEngine.searchByMultipleWordWithRanking("Konica Minolta");
+        wiki.forEach(System.out::println);
 
     }
 }

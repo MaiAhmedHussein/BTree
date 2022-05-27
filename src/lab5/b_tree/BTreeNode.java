@@ -1,27 +1,27 @@
 package lab5.b_tree;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
+    private int numOfKeys;
+    private boolean isLeaf;
     private List<K> keys;
     private List<V> values;
     private List<IBTreeNode<K, V>> children;
-    private boolean isLeaf;
-    private int numOfKeys;
 
     public BTreeNode() {
-        this.keys = new ArrayList<>();
-        this.values = new ArrayList<>();
-        this.children = new ArrayList<>();
         this.numOfKeys = -1;
         this.isLeaf = false;
+        this.keys = new LinkedList<>();
+        this.values = new LinkedList<>();
+        this.children = new LinkedList<>();
     }
 
     @Override
     public int getNumOfKeys() {
-        return numOfKeys;
+        return keys.size();
     }
 
     @Override
