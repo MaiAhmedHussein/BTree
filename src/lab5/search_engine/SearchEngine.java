@@ -21,7 +21,6 @@ public class SearchEngine implements ISearchEngine {
 
     // IBTree<id, IBTree<Word, its_rank>>
     private final IBTree<String, IBTree<String, Integer>> tree;
-
     private final List<String> ids; // to save all ids all the time
 
     public SearchEngine(int t) {
@@ -69,10 +68,9 @@ public class SearchEngine implements ISearchEngine {
 
         for (WikiDoc doc : wikiDoc) {
             String[] words = doc.getData().replaceAll("\n", " ").toLowerCase().split(" ");
-            IBTree<String, Integer> word_rank = new BTree<>(5);
+            IBTree<String, Integer> word_rank = new BTree<>(10);
             for (String word : words) {
                 if (word.equals("")) continue;
-
                 if (word_rank.search(word) == null) { // first added rank = 1
                     word_rank.insert(word, 1);
                 } else { // las rank incremented by 1
@@ -80,8 +78,13 @@ public class SearchEngine implements ISearchEngine {
                     word_rank.delete(word);
                     word_rank.insert(word, rank);
                 }
+                // System.out.println("Word: " + word);
+                if (word.equals("is"))
+                    System.out.println("YES_: " + word_rank.search("is"));
+
             }
             tree.insert(doc.getId(), word_rank);
+            // System.out.println("YES: " + tree.search(doc.getId()).search("is"));
             ids.add(doc.getId());
         }
     }
@@ -115,31 +118,16 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
-        /*
-        if (word == null) {
-            throw new RuntimeErrorException(new Error());
-        }
-
-        if (word.equals("")) {//empty word
-            return new ArrayList<>();
-        }
-
-        List<ISearchResult> searched = new ArrayList<>();
-
-        for (Map<String, IBTree<String, Integer>> file : files) {//looping on every file to find the file that contains this word
-            //Returning an iterator over the words in this file
-            for (Map.Entry<String, IBTree<String, Integer>> stringIBTreeEntry : file.entrySet()) {
-                BTree tree = (BTree) ((Map.Entry) stringIBTreeEntry).getValue();
-                if (tree.search(word.toLowerCase()) != null) {
-                    searched.add(new SearchResult((String) ((Map.Entry) stringIBTreeEntry).getKey(), (int) tree.search(word.toLowerCase())));
-                }
+        List<ISearchResult> results = new LinkedList<>();
+        for (String id : ids) {
+            Integer rank = tree.search(id).search(word);
+            if (rank != null) {
+                results.add(new SearchResult(id, rank));
+                // System.out.println(id);
             }
+            // System.out.println("out: " + rank);
         }
-        return searched;
-
-         */
-        return null;
-
+        return results;
     }
 
     @Override
