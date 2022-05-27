@@ -65,7 +65,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         int i;
         //if the inserted value is greater than the key in the list
         //then find the right to place to insert into inside the node
-        for (i = 0 ; i < insertInto.getNumOfKeys(); i++){
+        for (i = 0 ; i < insertInto.getNumOfKeys() && i<keys.size(); i++){
             //find the right to place to insert into inside the node
             if (key.compareTo(keys.get(i)) < 0){
                 break;
@@ -183,7 +183,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         newChildren = new LinkedList<>();
 
         ++i;
-        for (; i < child.getNumOfKeys(); ++i) {
+        for (; i < child.getNumOfKeys()&&i<keys.size(); ++i) {
             newKeys.add(keys.get(i));
             newValues.add(values.get(i));
             if (!child.isLeaf()) {
@@ -268,7 +268,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
         //continue looping after the middle to be the right side of the new root
         ++i;
-        for (; i < node.getNumOfKeys(); ++i) {
+        for (; i < node.getNumOfKeys()&&i<keys.size(); ++i) {
             newKeys.add(keys.get(i));
             newValues.add(values.get(i));
             if (!node.isLeaf()) {
@@ -303,8 +303,33 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         return null;
     }
 
-    private IBTreeNode<K, V> search(IBTreeNode<K, V> root, K key) {
-        if (root == null) return null;
+    private IBTreeNode<K, V> search(IBTreeNode<K, V> node, K key) {
+        while (node != null && !node.isLeaf()) {
+            List<K> keys = node.getKeys();
+            for (int i = 0; i < keys.size(); i++) {
+                K k = keys.get(i);
+                if (key.compareTo(k) == 0) { //key found
+                    return node;
+                } else if (key.compareTo(k) < 0) { //search in the left child
+                    List<IBTreeNode<K, V>> children = node.getChildren();
+                    node = children.get(i);
+                    break;
+                } else if (i == keys.size() - 1) { //search in the right child
+                    List<IBTreeNode<K, V>> children = node.getChildren();
+                    node = children.get(i + 1);
+                    break;
+                }
+            }
+        }
+
+        // additional check for key in node if this node is leaf
+        if (node != null && node.isLeaf() && foundKeyInCurrentNode(node, key)) {
+            return node;
+        }
+        else {
+            return null;
+        }
+       /* if (root == null) return null;
 
         int i = 0;
         while (i < root.getNumOfKeys() && key.compareTo(root.getKeys().get(i)) > 0) {
@@ -315,7 +340,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         } else if (root.isLeaf()) {
             return null;
         }
-        return search(root.getChildren().get(i), key);
+        return search(root.getChildren().get(i), key);*/
     }
 
     @Override
@@ -448,20 +473,24 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             List<K> siblingsKeys = sibling.getKeys();
             List<V> siblingsValues = sibling.getValues();
             // right sibling first index to be moves
-            K siblingKMoveToX = siblingsKeys.remove(0);
-            V siblingVMoveToX = siblingsValues.remove(0);
-            xKeys.set(xcIndex, siblingKMoveToX);
-            xValues.set(xcIndex, siblingVMoveToX);
-            root.setKeys(xKeys);
-            root.setValues(xValues);
-            sibling.setKeys(siblingsKeys);
-            sibling.setValues(siblingsValues);
+            if(siblingsKeys.size()>0) {
+                K siblingKMoveToX = siblingsKeys.remove(0);
+                V siblingVMoveToX = siblingsValues.remove(0);
 
+                xKeys.set(xcIndex, siblingKMoveToX);
+                xValues.set(xcIndex, siblingVMoveToX);
+                root.setKeys(xKeys);
+                root.setValues(xValues);
+                sibling.setKeys(siblingsKeys);
+                sibling.setValues(siblingsValues);
+            }
             // move pointers of children if not root from sibling to x.ci
             if (!xc.isLeaf()) {
                 List<IBTreeNode<K, V>> siblingChildren = sibling.getChildren();
                 List<IBTreeNode<K, V>> xcChildren = xc.getChildren();
-                xcChildren.add(siblingChildren.remove(0));
+                if(siblingChildren.size()>0) {
+                    xcChildren.add(siblingChildren.remove(0));
+                }
                 sibling.setChildren(siblingChildren);
                 xc.setChildren(xcChildren);
             }

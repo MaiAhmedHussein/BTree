@@ -15,8 +15,8 @@ public class Main {
 
 
        List<ISearchResult> list= searchEngine.searchByWordWithRanking("is");
-        list.forEach(System.out::println);
-       // System.out.println(list);
+       list.forEach(System.out::println);
+       // System.out.println("jii");
 
 
     }
