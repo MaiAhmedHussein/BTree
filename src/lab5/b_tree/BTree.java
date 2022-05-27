@@ -1,17 +1,14 @@
 package lab5.b_tree;
 
 import javax.management.RuntimeErrorException;
-
 import java.util.LinkedList;
 import java.util.List;
 
 public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
-
     private final int maxKeys;
     private IBTreeNode<K, V> root;
     private final int minimumDegree;
-
 
     public BTree(int minimumDegree) {
         this.root = null;
@@ -33,7 +30,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     public IBTreeNode<K, V> getRoot() {
         return this.root;
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void insert(K key, V value) {
         if (search(key) != null)//already exists
@@ -59,7 +56,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             //if the inserted value is greater than the key in the list
             //then find the right to place to insert into inside the node
             int i;
-            for (i = 0; i < insertInto.getNumOfKeys(); i++) { //find the right to place to insert into inside the node
+            for (i = 0; i < insertInto.getNumOfKeys(); i++) {
+                //find the right to place to insert into inside the node
                 if (key.compareTo(keys.get(i)) < 0) {
                     break;
                 }
@@ -71,8 +69,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     }
 
     public IBTreeNode<K, V> getInsertionPosition(IBTreeNode<K, V> node, K key) {
-        // If root is full, then tree grows in height
-        //so we need to split it
+        // If root is full, then tree grows in height,
+        // so we need to split it
         if (node.getNumOfKeys() == this.maxKeys) {
             this.splitRoot(node);
             node = this.root;
@@ -107,7 +105,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             }
 
         }
-
         return node;
     }
 

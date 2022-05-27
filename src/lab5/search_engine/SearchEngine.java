@@ -109,6 +109,7 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
+
         /*
         List<ISearchResult> searched = new ArrayList<>();
         if (word != (null)) {
