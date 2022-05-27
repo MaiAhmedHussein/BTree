@@ -34,40 +34,46 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         return this.root;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void insert(K key, V value) {
-        if (search(key) != null)//already exists
+        if (key == null || value == null){ //invalid input
+            throw new RuntimeErrorException(new Error());
+        }
+        if (search(key) != null){ //already exists
             return;
-
-        if (this.getRoot() == null) {
-            //for the first node
-            this.root = new BTreeNode<>();
+        }
+        if (this.root == null){
+            //tree is empty
+            IBTreeNode<K, V> newRoot = new BTreeNode<>();
             List<K> keys = new LinkedList<>();
-            keys.add(key);
             List<V> values = new LinkedList<>();
+            keys.add(key);
             values.add(value);
             List<IBTreeNode<K, V>> children = new LinkedList<>();
-            this.root.setChildren(children);
-            this.root.setKeys(keys);
-            this.root.setValues(values);
-            this.root.setLeaf(true);
-            this.root.setNumOfKeys(1);
-        } else {
-            //to get the position where to insert the new key
-            IBTreeNode<K, V> insertInto = this.getInsertionPosition(this.root, key);
-            List<K> keys = insertInto.getKeys();
-            //if the inserted value is greater than the key in the list
-            //then find the right to place to insert into inside the node
-            int i;
-            for (i = 0; i < insertInto.getNumOfKeys(); i++) { //find the right to place to insert into inside the node
-                if (key.compareTo(keys.get(i)) < 0) {
-                    break;
-                }
-            }
-            keys.add(i, key);
-            insertInto.getValues().add(i, value);
-            insertInto.setNumOfKeys(keys.size());
+            newRoot.setKeys(keys);
+            newRoot.setValues(values);
+            newRoot.setNumOfKeys(keys.size());
+            newRoot.setChildren(children);
+            newRoot.setLeaf(true); //the root of the tree is also a leaf
+            this.root = newRoot;
+            return;
         }
+        //to get the position where to insert the new key
+        IBTreeNode<K, V> insertInto = this.getInsertionPosition(this.root, key);
+        List<K> keys = insertInto.getKeys();
+        int i;
+        //if the inserted value is greater than the key in the list
+        //then find the right to place to insert into inside the node
+        for (i = 0 ; i < insertInto.getNumOfKeys(); i++){
+            //find the right to place to insert into inside the node
+            if (key.compareTo(keys.get(i)) < 0){
+                break;
+            }
+        }
+        keys.add(i, key);
+        insertInto.getValues().add(i, value);
+        insertInto.setNumOfKeys(keys.size());
     }
 
     public IBTreeNode<K, V> getInsertionPosition(IBTreeNode<K, V> node, K key) {
