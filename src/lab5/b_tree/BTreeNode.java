@@ -1,21 +1,27 @@
-import java.util.ArrayList;
+package ds2.lab5.b_tree;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
+
+    private List<K> keys;
+    private List<V> values;
+    private List<IBTreeNode<K, V>> children;
+    private boolean isLeaf;
     private int numOfKeys;
-    private boolean isLeaf = false;
 
-    //the maximum size of it 2*t-1
-    private List<K> keys = new ArrayList<>();
-    private List<V> values= new ArrayList<>();
-    //Number of children of a node is equal to the number of keys in it plus 1
-    private List<IBTreeNode<K, V>> children= new ArrayList<>();
-
-
+    public BTreeNode() {
+        this.keys = new LinkedList<>();
+        this.values = new LinkedList<>();
+        this.children = new LinkedList<>();
+        this.numOfKeys = -1;
+        this.isLeaf = false;
+    }
 
     @Override
     public int getNumOfKeys() {
-        return this.keys.size();
+        return numOfKeys;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setKeys(List<K> keys) {
-        this.keys = keys;
+        this.keys = new LinkedList<>(keys);
     }
 
     @Override
@@ -50,7 +56,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setValues(List<V> values) {
-        this.values = values;
+        this.values = new LinkedList<>(values);
     }
 
     @Override
@@ -60,21 +66,6 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public void setChildren(List<IBTreeNode<K, V>> children) {
-        this.children = children;
+        this.children = new LinkedList<>(children);
     }
-
-
-    public void addToValues(V value) {
-        this.values.add(value);
-    }
-
-    public void addToKeys(K key) {
-        this.keys.add(key);
-    }
-
-    public void addToChildren(BTreeNode node) {
-        this.children.add(node);
-    }
-
 }
-
