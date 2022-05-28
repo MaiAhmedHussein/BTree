@@ -12,8 +12,7 @@ public class Main {
 
         ISearchEngine searchEngine = new SearchEngine(10);
         searchEngine.indexWebPage("src/data_sample/wiki_00");
-
-        List<ISearchResult> wiki = searchEngine.searchByMultipleWordWithRanking("Konica Minolta");
+        List<ISearchResult> wiki = searchEngine.searchByWordWithRanking("is");
         wiki.forEach(System.out::println);
 
     }

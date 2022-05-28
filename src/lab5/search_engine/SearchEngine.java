@@ -68,6 +68,7 @@ public class SearchEngine implements ISearchEngine {
             String[] words = doc.getData().replaceAll("\n", " ").toLowerCase().split(" ");
             IBTree<String, Integer> word_rank = new BTree<>(10);
             for (String word : words) {
+
                 if (word.equals("")) continue;
                 Integer value = word_rank.search(word);
                 if (value == null) { // first added rank = 1
@@ -79,13 +80,15 @@ public class SearchEngine implements ISearchEngine {
                 }
             }
             tree.insert(doc.getId(), word_rank);
-            // System.out.println("YES: " + tree.search(doc.getId()).search("is"));
             ids.add(doc.getId());
         }
     }
 
+
+
     @Override
     public void indexDirectory(String directoryPath) {
+        //Looping through the files and doing the same as indexWebPage for each file.
         File dir = new File(directoryPath);
         File[] listFiles = dir.listFiles();
 
@@ -98,8 +101,12 @@ public class SearchEngine implements ISearchEngine {
         }
     }
 
+
+
     @Override
     public void deleteWebPage(String filePath) {
+        //Removing the file with the given path,
+        // by reading this file and call function delete for each word id.
         File file = new File(filePath);
         if (!file.exists()) return;
 
@@ -113,6 +120,8 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
+        //Loops through every document in this file,
+        // and apply B-tree search to each word of the documents.
         List<ISearchResult> results = new LinkedList<>();
         for (String id : ids) {
             Integer rank = tree.search(id).search(word.toLowerCase());
@@ -125,6 +134,8 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public List<ISearchResult> searchByMultipleWordWithRanking(String sentence) {
+        //Same as searchByWordWithRanking but splitting the sentence into multiple words,
+        // and getting the minimum of them if the sentence is found in the specific id.
         if (sentence == null) {
             return null;
         }
